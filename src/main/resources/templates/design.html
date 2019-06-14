@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ 	xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Taco Cloud</title>
+		<link rel="stylesheet" th:href="@{/styles.css}" />
+	</head>
+	<body>
+		<h1>Design your taco!</h1>
+		<img th:src="@{/images/taco_cloud.png}"/>
+		
+		<!-- th:object .- Es un objeto que es enviado desde el formulario al metodo decorado con @PostMapping
+		, el cual lo recibe por medio de un parametro de la misma clase
+		
+		Otra forma de ver este objeto es diciendo que th:object - define un objeto que es cargado al formulario
+		desde el metodo GET para ser seteado con el metodo POST 
+		 -->
+		<form method="POST" th:object="${taco}">
+		
+			<!-- componente que debe ser incluido en cada form que haga una peticion POST -->
+			<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+		
+			<div class="grid">
+			
+				<div class="ingredient-group" id="wraps">
+					<h3>Designate your wrap:</h3>
+					
+					<!-- se crea un checkbox por cada elemento en la lista identificada por la llave wrap -->
+					<div th:each="ingredient:${wrap}">
+					
+						<!-- En el caso de los checkboxes el seteo no es tan sencillo debido
+						a las siguientes precondiciones:
+						
+							1 - Un grupo de checkboxes genera un conjunto de datos y no un dato primitivo
+							, como en el caso de las cajas de texto, por lo que su almacenamiento
+							se realiza en una implementacion de una Lista, comunmente un ArrayList
+							
+							2 - el valor definido en th:value debe de ser un dato que identifique al objeto
+							debido a que este valor se le pasa a un Converter
+							
+							Un converter es una clase que regresa un objeto buscado dentro de un repositorio usando
+							un valor identificador 
+					
+						 -->
+						<input type="checkbox" th:field="*{ingredients}" th:value="${ingredient.id}" />
+						<span th:text="${ingredient.name}">INGREDIENT</span><br/>
+					</div>
+				</div>
+				
+				<div class="ingredient-group" id="proteins">
+					<h3>Pick your protein:</h3>
+					<div th:each="ingredient:${protein}">
+						<input type="checkbox" th:field="*{ingredients}" th:value="${ingredient.id}" />
+						<span th:text="${ingredient.name}">INGREDIENT</span><br/>
+					</div>
+				</div>
+				
+				<div class="ingredient-group" id="cheeses">
+					<h3>Choose your cheese:</h3>
+					<div th:each="ingredient:${cheese}">
+						<input type="checkbox" th:field="*{ingredients}" th:value="${ingredient.id}" />
+						<span th:text="${ingredient.name}">INGREDIENT</span><br/>
+					</div>
+				</div>
+				
+				<div class="ingredient-group" id="veggies">
+					<h3>Determine your veggies:</h3>
+					<div th:each="ingredient:${veggies}">
+						<input type="checkbox" th:field="*{ingredients}" th:value="${ingredient.id}" />
+						<span th:text="${ingredient.name}">INGREDIENT</span><br/>
+					</div>
+				</div>
+				
+				<div class="ingredient-group" id="sauces">
+					<h3>Select your sauce:</h3>
+					<div th:each="ingredient:${sauce}">
+						<input name="ingredients" type="checkbox" th:field="*{ingredients}" th:value="${ingredient.id}" />
+						<span th:text="${ingredient.name}">INGREDIENT</span><br/>
+					</div>
+				</div>
+			</div>
+			
+			<div>
+				<h3>Name your taco creation:</h3>
+				<input type="text" th:field="*{name}"/>
+				<br/>
+				<button>Submit your taco</button>
+			</div>
+		</form>
+	</body>
+</html>
